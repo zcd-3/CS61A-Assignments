@@ -24,7 +24,10 @@ def num_eights(n):
     ...       ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if n < 10:
+        return (int)(n == 8)
+    else:
+        return num_eights(n % 10) + num_eights(n // 10)
 
 
 def digit_distance(n):
@@ -46,7 +49,10 @@ def digit_distance(n):
     ...       ['For', 'While'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    if n < 10:
+        return 0
+    else:
+        return digit_distance(n // 10) + abs(n % 10 - (n // 10) % 10)
 
 
 def interleaved_sum(n, odd_func, even_func):
@@ -70,7 +76,13 @@ def interleaved_sum(n, odd_func, even_func):
     >>> check(HW_SOURCE_FILE, 'interleaved_sum', ['BitAnd', 'BitOr', 'BitXor']) # ban bitwise operators, don't worry about these if you don't know what they are
     True
     """
-    "*** YOUR CODE HERE ***"
+    if n == 0:
+        return 0
+    def new_odd_func(x):
+        return odd_func(x+1)
+    def new_even_func(x):
+        return even_func(x+1)
+    return odd_func(1) + interleaved_sum(n - 1, new_even_func, new_odd_func)
 
 
 def next_smaller_dollar(bill):
@@ -106,7 +118,14 @@ def count_dollars(total):
     >>> check(HW_SOURCE_FILE, 'count_dollars', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    def helper(rest, biggest_dollar):
+        if rest < 0:
+            return 0
+        elif biggest_dollar == 1 or rest == 0:
+            return 1
+        else:
+            return helper(rest - biggest_dollar, biggest_dollar) + helper(rest, next_smaller_dollar(biggest_dollar))
+    return helper(total, 100)
 
 
 def next_larger_dollar(bill):
@@ -142,7 +161,15 @@ def count_dollars_upward(total):
     >>> check(HW_SOURCE_FILE, 'count_dollars_upward', ['While', 'For'])
     True
     """
-    "*** YOUR CODE HERE ***"
+    def helper(rest, smallest_dollar):
+        if rest < 0 or smallest_dollar == None:
+            return 0
+        elif rest == 0:
+            return 1
+        else:
+            return helper(rest - smallest_dollar, smallest_dollar) + helper(rest, next_larger_dollar(smallest_dollar))
+    return helper(total, 1)
+        
 
 
 def print_move(origin, destination):
@@ -177,7 +204,13 @@ def move_stack(n, start, end):
     Move the top disk from rod 1 to rod 3
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
-    "*** YOUR CODE HERE ***"
+    if n == 1:
+        print_move(start, end)
+    else:
+        rest = 6 - start - end
+        move_stack(n - 1, start, rest)
+        print_move(start, end)
+        move_stack(n - 1, rest, end)
 
 
 from operator import sub, mul
